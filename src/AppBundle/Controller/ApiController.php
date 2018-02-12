@@ -2,57 +2,46 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\ArticleNormalizer;
 use FOS\RestBundle\Controller\FOSRestController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use FOS\RestBundle\Controller\Annotations\Get;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ApiController extends FOSRestController
 {
     /**
      * @Get("/api/v1/articles", name="api_v1_article_cget")
      */
-    public function cgetAction()
+    public function cgetAction(ArticleNormalizer $normalizer)
     {
-        $em = $this->getDoctrine()->getManager();
+        $articles = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('AppBundle:Article')
+            ->findAll();
 
-        $articles = $em->getRepository('AppBundle:Article')->findAll();
-
-        $normalizedArticles = [];
-
-        foreach ($articles as $article) {
-            $normalizedArticle = [
-                "title"      => $article->getTitle(),
-                "content"    => $article->getContent(),
-                "author"     => $article->getAuthor(),
-                "created_at" => $article->getCreatedAt()->format('c'),
-                "updated_at" => $article->getUpdatedAt()->format('c'),
-                "uri"        => $this->generateUrl('api_v1_article_get', ["id" => $article->getId()])
-            ];
-
-            $normalizedArticles[] = $normalizedArticle;
-        }
-
-        return new JsonResponse($normalizedArticles);
+        return new JsonResponse($normalizer->normalize($articles));
     }
 
     /**
      * @Get("/api/v1/articles/{id}", name="api_v1_article_get")
      */
-    public function getAction($id)
+    public function getAction($id, ArticleNormalizer $normalizer)
     {
-        $em = $this->getDoctrine()->getManager();
+        $article = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('AppBundle:Article')
+            ->find($id);
 
-        $article = $em->getRepository('AppBundle:Article')->find($id);
+        }
 
-        $normalizedArticle = [
-            "title"      => $article->getTitle(),
-            "content"    => $article->getContent(),
-            "author"     => $article->getAuthor(),
-            "created_at" => $article->getCreatedAt()->format('c'),
-            "updated_at" => $article->getUpdatedAt()->format('c'),
-            "uri"        => $this->generateUrl('api_v1_article_get', ["id" => $article->getId()])
-       ];
+        return new JsonResponse($normalizer->normalize([$article])[0]);
+    }
 
-        return new JsonResponse($normalizedArticle);
+    /**
+     */
+    {
+
+
+
     }
 }

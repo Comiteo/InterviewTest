@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Article
+ * Article.
  *
  * @ORM\Table(name="article")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ArticleRepository")
@@ -56,9 +56,8 @@ class Article
      */
     private $author;
 
-
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -68,7 +67,7 @@ class Article
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      *
@@ -82,7 +81,7 @@ class Article
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -92,7 +91,7 @@ class Article
     }
 
     /**
-     * Set content
+     * Set content.
      *
      * @param string $content
      *
@@ -106,7 +105,7 @@ class Article
     }
 
     /**
-     * Get content
+     * Get content.
      *
      * @return string
      */
@@ -116,7 +115,7 @@ class Article
     }
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @param \DateTime $createdAt
      *
@@ -130,7 +129,7 @@ class Article
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
@@ -140,7 +139,7 @@ class Article
     }
 
     /**
-     * Set updatedAt
+     * Set updatedAt.
      *
      * @param \DateTime $updatedAt
      *
@@ -154,7 +153,7 @@ class Article
     }
 
     /**
-     * Get updatedAt
+     * Get updatedAt.
      *
      * @return \DateTime
      */
@@ -164,7 +163,7 @@ class Article
     }
 
     /**
-     * Set author
+     * Set author.
      *
      * @param string $author
      *
@@ -178,7 +177,7 @@ class Article
     }
 
     /**
-     * Get author
+     * Get author.
      *
      * @return string
      */
@@ -187,4 +186,3 @@ class Article
         return $this->author;
     }
 }
-
