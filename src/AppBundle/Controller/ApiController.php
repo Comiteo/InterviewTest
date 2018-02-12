@@ -32,16 +32,10 @@ class ApiController extends FOSRestController
             ->getRepository('AppBundle:Article')
             ->find($id);
 
+        if (!$article) {
+            throw $this->createNotFoundException('The article does not exist');
         }
 
         return new JsonResponse($normalizer->normalize([$article])[0]);
-    }
-
-    /**
-     */
-    {
-
-
-
     }
 }
