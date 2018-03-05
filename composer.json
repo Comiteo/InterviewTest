@@ -21,6 +21,7 @@
     },
     "require": {
         "php": ">=5.5.9",
+        "Predis/Predis": "^1.1",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",
         "friendsofsymfony/rest-bundle": "^2.2",
