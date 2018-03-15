@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Article.
+ * Author.
  *
- * @ORM\Table(name="article")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ArticleRepository")
+ * @ORM\Table(name="author")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\AuthorRepository")
  */
-class Article
+class Author
 {
     /**
      * @var int
@@ -24,16 +24,16 @@ class Article
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", length=255)
+     * @ORM\Column(name="name", type="string")
      */
-    private $title;
+    private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="content", type="text")
+     * @ORM\Column(name="bio", type="text")
      */
-    private $content;
+    private $bio;
 
     /**
      * @var \DateTime
@@ -50,13 +50,6 @@ class Article
     private $updatedAt;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="author", type="string", length=255)
-     */
-    private $author;
-
-    /**
      * Get id.
      *
      * @return int
@@ -67,51 +60,51 @@ class Article
     }
 
     /**
-     * Set title.
+     * Set name.
      *
-     * @param string $title
+     * @param string $name
      *
      * @return Article
      */
-    public function setTitle($title)
+    public function setName($name)
     {
-        $this->title = $title;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get title.
+     * Get name.
      *
      * @return string
      */
-    public function getTitle()
+    public function getName()
     {
-        return $this->title;
+        return $this->name;
     }
 
     /**
-     * Set content.
+     * Set bio.
      *
-     * @param string $content
+     * @param string $bio
      *
      * @return Article
      */
-    public function setContent($content)
+    public function setBio($bio)
     {
-        $this->content = $content;
+        $this->bio = $bio;
 
         return $this;
     }
 
     /**
-     * Get content.
+     * Get bio.
      *
      * @return string
      */
-    public function getContent()
+    public function getBio()
     {
-        return $this->content;
+        return $this->bio;
     }
 
     /**
@@ -160,29 +153,5 @@ class Article
     public function getUpdatedAt()
     {
         return $this->updatedAt;
-    }
-
-    /**
-     * Set author.
-     *
-     * @param string $author
-     *
-     * @return Article
-     */
-    public function setAuthor($author)
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
-    /**
-     * Get author.
-     *
-     * @return string
-     */
-    public function getAuthor()
-    {
-        return $this->author;
     }
 }
