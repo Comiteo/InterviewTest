@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
@@ -18,26 +19,32 @@ class Article
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"author_read"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"author_read"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"author_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"author_read"})
      */
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity=Author::class, inversedBy="articles")
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"author_read"})
      */
     private $author;
 
@@ -94,12 +101,12 @@ class Article
         return $this;
     }
 
-    public function getAuthor(): ?string
+    public function getAuthor(): ?Author
     {
         return $this->author;
     }
 
-    public function setAuthor(string $author): self
+    public function setAuthor(?Author $author): self
     {
         $this->author = $author;
 
