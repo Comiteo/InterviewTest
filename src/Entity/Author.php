@@ -37,6 +37,11 @@ class Author
      */
     private $updatedAt;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Article", mappedBy="author")
+     */
+    private $articles;
+
     public function getId(): ?int
     {
         return $this->id;
