@@ -2,16 +2,17 @@
 
 namespace App\Entity;
 
+use App\Repository\AuthorRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
+ * @ORM\Entity(repositoryClass=AuthorRepository::class)
  */
-class Article
+class Author
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -19,12 +20,12 @@ class Article
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $title;
+    private $name;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $content;
+    private $bio;
 
     /**
      * @ORM\Column(type="datetime")
@@ -37,36 +38,35 @@ class Article
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Author", inversedBy="articles")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="Article", mappedBy="author")
      */
-    private $author;
+    private $articles;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getName(): ?string
     {
-        return $this->title;
+        return $this->name;
     }
 
-    public function setTitle(string $title): self
+    public function setName(string $name): self
     {
-        $this->title = $title;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getContent(): ?string
+    public function getBio(): ?string
     {
-        return $this->content;
+        return $this->bio;
     }
 
-    public function setContent(string $content): self
+    public function setBio(string $bio): self
     {
-        $this->content = $content;
+        $this->bio = $bio;
 
         return $this;
     }
@@ -95,25 +95,22 @@ class Article
         return $this;
     }
 
-    public function getAuthor(): ?Author
+    /**
+     * @return mixed
+     */
+    public function getArticles()
     {
-        return $this->author;
+        return $this->articles;
     }
 
-    public function setAuthor(Author $author): self
+    /**
+     * @param mixed $articles
+     * @return Author
+     */
+    public function setArticles($articles): self
     {
-        $this->author = $author;
+        $this->articles = $articles;
 
         return $this;
-    }
-
-    public static function create(array $data): self
-    {
-        return (new self())
-            ->setAuthor($data['author'])
-            ->setTitle($data['title'])
-            ->setContent($data['content'])
-            ->setCreatedAt(new \DateTime())
-            ->setUpdatedAt(new \DateTime());
     }
 }
