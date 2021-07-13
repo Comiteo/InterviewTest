@@ -37,7 +37,6 @@ class Article
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="string", length=255)
      * @ORM\ManyToOne(targetEntity="Author", inversedBy="articles")
      * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
      */
@@ -96,12 +95,12 @@ class Article
         return $this;
     }
 
-    public function getAuthor(): ?string
+    public function getAuthor(): ?Author
     {
         return $this->author;
     }
 
-    public function setAuthor(string $author): self
+    public function setAuthor(Author $author): self
     {
         $this->author = $author;
 

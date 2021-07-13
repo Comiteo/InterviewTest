@@ -39,7 +39,7 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Post("/api/v1/articles", name="api_v1_article_action")
+     * @Route("/api/v1/articles", name="api_v1_article_action", methods={"POST"})
      */
     public function createAction(Request $request, EntityManagerInterface $em, ValidatorInterface $validator)
     {
