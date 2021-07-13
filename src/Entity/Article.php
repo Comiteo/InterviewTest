@@ -105,4 +105,14 @@ class Article
 
         return $this;
     }
+
+    public static function create(array $data): self
+    {
+        return (new self())
+            ->setAuthor($data['author'])
+            ->setTitle($data['title'])
+            ->setContent($data['content'])
+            ->setCreatedAt(new \DateTime())
+            ->setUpdatedAt(new \DateTime());
+    }
 }
