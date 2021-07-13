@@ -94,4 +94,23 @@ class Author
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getArticles()
+    {
+        return $this->articles;
+    }
+
+    /**
+     * @param mixed $articles
+     * @return Author
+     */
+    public function setArticles($articles): self
+    {
+        $this->articles = $articles;
+
+        return $this;
+    }
 }
