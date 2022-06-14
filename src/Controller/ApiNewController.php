@@ -28,10 +28,13 @@ class ApiNewController extends AbstractController
             return $this->json($normalizedArticle);
         }
 
+        dump($article);
+
         return $this->json(null, 404);
     }
 
     function article($article) {
+        //todo
         $normalizedArticle = [
             "title" => $article->getTitle(),
             "content" => $article->getContent(),

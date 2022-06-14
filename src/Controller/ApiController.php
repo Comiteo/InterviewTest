@@ -45,6 +45,7 @@ class ApiController extends AbstractController
     }
 
     function article($article) {
+        //todo
         $normalizedArticle = [
             "title" => $article->getTitle(),
             "content" => $article->getContent(),
