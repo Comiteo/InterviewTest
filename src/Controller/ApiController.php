@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ApiController extends AbstractController
@@ -19,15 +20,7 @@ class ApiController extends AbstractController
         $normalizedArticles = [];
 
         foreach ($articles as $article) {
-            $normalizedArticle = [
-                "title" => $article->getTitle(),
-                "content" => $article->getContent(),
-                "author" => $article->getAuthor(),
-                "created_at" => $article->getCreatedAt()->format('c'),
-                "updated_at" => $article->getUpdatedAt()->format('c'),
-                "uri" => $this->generateUrl('api_v1_article_get', ["id" => $article->getId()]),
-            ];
-
+            $normalizedArticle = $this->article($article)
             $normalizedArticles[] = $normalizedArticle;
         }
 
@@ -39,9 +32,20 @@ class ApiController extends AbstractController
      */
     public function getOne(int $id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $article = $em->getRepository('App:Article')->find($id);
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $article = $em->getRepository('App:Article')->find($id);
 
+            $normalizedArticle = $this->article($article);
+        } catch (\Exception $exception) {
+            //
+        }
+
+        return $this->json($normalizedArticle);
+    }
+
+    function article($article) {
+        //todo
         $normalizedArticle = [
             "title" => $article->getTitle(),
             "content" => $article->getContent(),
@@ -51,6 +55,6 @@ class ApiController extends AbstractController
             "uri" => $this->generateUrl('api_v1_article_get', ["id" => $article->getId()]),
         ];
 
-        return $this->json($normalizedArticle);
+        return $normalizedArticle;
     }
 }
