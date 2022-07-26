@@ -2,16 +2,17 @@
 
 namespace App\Entity;
 
+use App\Repository\AuthorRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
+ * @ORM\Entity(repositoryClass=AuthorRepository::class)
  */
-class Article
+class Author
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -19,12 +20,12 @@ class Article
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $title;
+    private $name;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $content;
+    private $bio;
 
     /**
      * @ORM\Column(type="datetime")
@@ -36,37 +37,31 @@ class Article
      */
     private $updatedAt;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Author::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $Author;
-
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getName(): ?string
     {
-        return $this->title;
+        return $this->name;
     }
 
-    public function setTitle(string $title): self
+    public function setName(string $name): self
     {
-        $this->title = $title;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getContent(): ?string
+    public function getBio(): ?string
     {
-        return $this->content;
+        return $this->bio;
     }
 
-    public function setContent(string $content): self
+    public function setBio(string $bio): self
     {
-        $this->content = $content;
+        $this->bio = $bio;
 
         return $this;
     }
@@ -91,18 +86,6 @@ class Article
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getAuthor(): ?Author
-    {
-        return $this->Author;
-    }
-
-    public function setAuthor(?Author $Author): self
-    {
-        $this->Author = $Author;
 
         return $this;
     }
