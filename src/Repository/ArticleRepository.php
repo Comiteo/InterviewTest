@@ -4,6 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Article;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 /**
  * @method Article|null find($id, $lockMode = null, $lockVersion = null)
@@ -11,6 +15,10 @@ use Doctrine\ORM\EntityRepository;
  * @method Article[]    findAll()
  * @method Article[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ArticleRepository extends EntityRepository
+class ArticleRepository extends ServiceEntityRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Article::class);
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Author;
 use App\Repository\ArticleRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,19 +34,25 @@ class ApiController extends AbstractController
 
     /**
      * @Route("/api/v1/articles", name="api_v1_article_cget", methods={"GET"})
+     *
+     * @return JsonResponse
      */
     public function getArticles(): JsonResponse
     {
-        $articles = $this->entityManager->getRepository('App:Article')->findAll();
+        $articles = $this->entityManager->getRepository(Article::class)->findAll();
         return $this->json($this->normalizeArticles($articles));
     }
 
     /**
      * @Route("/api/v1/articles/{id}", name="api_v1_article_get", methods={"GET"})
+     *
+     * @param integer $id
+     *
+     * @return JsonResponse
      */
     public function getArticleById(int $id) : JsonResponse
     {
-        $article = $this->entityManager->getRepository('App:Article')->find($id);
+        $article = $this->entityManager->getRepository(Article::class)->find($id);
 
         if(!$article) {
             return $this->json(['404' => 'The article does not exist.']);
@@ -56,6 +63,10 @@ class ApiController extends AbstractController
 
     /**
      * @Route("/api/v1/articles", name="api_v1_article_post", methods={"POST"})
+     * 
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
     public function createArticle(Request $request): JsonResponse
     {
@@ -65,6 +76,20 @@ class ApiController extends AbstractController
 
         $article->setCreatedAt(new DateTime())
             ->setUpdatedAt(new DateTime());
+
+        $authorName = $article->getAuthor()->getName();
+
+        if (!$authorName) {
+            return $this->json(['400' => 'The author name must be provided.']);
+        }
+
+        $author = $this->entityManager->getRepository(Author::class)->findByName($authorName);
+
+        if (empty($author)) {
+            return $this->json(['404' => 'The author does not exist.']);
+        }
+
+        $article->setAuthor($author[0]);
 
         $this->entityManager->persist($article);
         $this->entityManager->flush();
