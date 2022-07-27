@@ -55,7 +55,7 @@ class ApiController extends AbstractController
         $article = $this->entityManager->getRepository(Article::class)->find($id);
 
         if(!$article) {
-            return $this->json(['404' => 'The article does not exist.']);
+            return $this->json(['404' => 'The article does not exist.'], 404);
         }
 
         return $this->json($this->normalizeArticle($article));
@@ -80,13 +80,13 @@ class ApiController extends AbstractController
         $authorName = $article->getAuthor()->getName();
 
         if (!$authorName) {
-            return $this->json(['400' => 'The author name must be provided.']);
+            return $this->json(['400' => 'The author name must be provided.'], 400);
         }
 
         $author = $this->entityManager->getRepository(Author::class)->findByName($authorName);
 
         if (empty($author)) {
-            return $this->json(['404' => 'The author does not exist.']);
+            return $this->json(['404' => 'The author does not exist.'], 404);
         }
 
         $article->setAuthor($author[0]);
