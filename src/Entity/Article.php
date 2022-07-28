@@ -4,6 +4,10 @@ namespace App\Entity;
 
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
@@ -18,7 +22,7 @@ class Article
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $title;
 
@@ -43,6 +47,18 @@ class Article
      */
     private $Author;
 
+    /**
+     * @param ClassMetadata $metadata
+     *
+     * @return void
+     */
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('title', new NotBlank());
+        $metadata->addPropertyConstraint('title', new NotNull());
+        $metadata->addPropertyConstraint('content', new NotBlank());
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -53,7 +69,7 @@ class Article
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(?string $title): self
     {
         $this->title = $title;
 

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Article;
 use App\Entity\Author;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -24,55 +25,20 @@ class AuthorRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @param int $authorId
+     *
+     * @return integer
      */
-    public function add(Author $entity, bool $flush = true): void
+    public function getArticlesCount(int $authorId): int
     {
-        $this->_em->persist($entity);
-        if ($flush) {
-            $this->_em->flush();
-        }
-    }
+        $articleRepository = $this->getEntityManager()->getRepository(Article::class);
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function remove(Author $entity, bool $flush = true): void
-    {
-        $this->_em->remove($entity);
-        if ($flush) {
-            $this->_em->flush();
-        }
-    }
-
-    // /**
-    //  * @return Author[] Returns an array of Author objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
+        $count = $articleRepository->createQueryBuilder('article')
+            ->select('count(article.id)')
+            ->where("article.Author = {$authorId}")
             ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+            ->getScalarResult();
 
-    /*
-    public function findOneBySomeField($value): ?Author
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $count[0][1];
     }
-    */
 }

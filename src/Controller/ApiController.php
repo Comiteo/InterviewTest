@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ApiController extends AbstractController
 {
@@ -33,7 +34,7 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route("/api/v1/articles", name="api_v1_article_cget", methods={"GET"})
+     * @Route("/api/v1/articles", name="api_v1_article_get_list", methods={"GET"})
      *
      * @return JsonResponse
      */
@@ -68,7 +69,7 @@ class ApiController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function createArticle(Request $request): JsonResponse
+    public function createArticle(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $body = $request->getContent();
 
@@ -76,6 +77,12 @@ class ApiController extends AbstractController
 
         $article->setCreatedAt(new DateTime())
             ->setUpdatedAt(new DateTime());
+
+        $errors = $validator->validate($article);
+
+        if (count($errors) > 0) {
+            return $this->json(['400' => $errors], 400);
+        }
 
         $authorName = $article->getAuthor()->getName();
 
@@ -95,6 +102,29 @@ class ApiController extends AbstractController
         $this->entityManager->flush();
 
         return $this->json($this->normalizeArticle($article));
+    }
+
+    /**
+     * @Route("/api/v1/author/{id}/countArticles", name="api_v1_author_articles_count", methods={"GET"})
+     *
+     * @param Request $request
+     * @param integer $id
+     *
+     * @return JsonResponse
+     */
+    public function getArticlesNumberByAuthor(Request $request, int $id): JsonResponse
+    {
+        $authorRepository = $this->entityManager->getRepository(Author::class);
+
+        $author = $authorRepository->findById($id);
+
+        if (empty($author)) {
+            return $this->json(['404' => 'The author does not exist.'], 404);
+        }
+
+        $count = $this->entityManager->getRepository(Author::class)->getArticlesCount($id);
+
+        return $this->json(['count' => $count]);
     }
 
     /**
