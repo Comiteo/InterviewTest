@@ -14,23 +14,26 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class ApiController extends AbstractController
 {
     private NormalizerInterface $normalizer;
     private SerializerInterface $serializer;
     private EntityManagerInterface $entityManager;
+    private CacheInterface $cache;
 
     /**
      * @param NormalizerInterface $normalizer
      * @param SerializerInterface $serializer
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(NormalizerInterface $normalizer, SerializerInterface $serializer, EntityManagerInterface $entityManager)
+    public function __construct(NormalizerInterface $normalizer, SerializerInterface $serializer, EntityManagerInterface $entityManager, CacheInterface $cache)
     {
         $this->normalizer = $normalizer;
         $this->serializer = $serializer;
         $this->entityManager = $entityManager;
+        $this->cache = $cache;
     }
 
     /**
@@ -107,12 +110,11 @@ class ApiController extends AbstractController
     /**
      * @Route("/api/v1/author/{id}/countArticles", name="api_v1_author_articles_count", methods={"GET"})
      *
-     * @param Request $request
      * @param integer $id
      *
      * @return JsonResponse
      */
-    public function getArticlesNumberByAuthor(Request $request, int $id): JsonResponse
+    public function getArticlesNumberByAuthorId(int $id): JsonResponse
     {
         $authorRepository = $this->entityManager->getRepository(Author::class);
 
@@ -122,7 +124,7 @@ class ApiController extends AbstractController
             return $this->json(['404' => 'The author does not exist.'], 404);
         }
 
-        $count = $this->entityManager->getRepository(Author::class)->getArticlesCount($id);
+        $count = $this->cache->get("author_articles_count_{$id}", fn () => $this->entityManager->getRepository(Author::class)->getArticlesCount($id));
 
         return $this->json(['count' => $count]);
     }
