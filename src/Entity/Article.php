@@ -36,13 +36,13 @@ class Article
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
+     * @Assert\Type(type="\DateTime")
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
+     * @Assert\Type(type="\DateTime")
      */
     private $updatedAt;
 
