@@ -7,12 +7,20 @@ use App\Form\ArticleType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\CacheInterface;
 
 /**
  * @Route("/article")
  */
 class ArticleController extends AbstractController
 {
+    private CacheInterface $cache;
+
+    public function __construct(CacheInterface $cache)
+    {
+        $this->cache = $cache;
+    }
+
     /**
      * @Route("/", name="article_index", methods={"GET"})
      */
@@ -106,9 +114,16 @@ class ArticleController extends AbstractController
         $article = $em->getRepository('App:Article')->find($id);
 
         if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {
+            $em = $this->getDoctrine()->getManager();
+            $author = $em->getRepository('App:Author')->find($article->getAuthor()->getId());
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($article);
             $entityManager->flush();
+
+            if ($author) {
+                $this->cache->delete("author_articles_count_{$author->getId()}");
+            }
         }
 
         return $this->redirectToRoute('article_index');

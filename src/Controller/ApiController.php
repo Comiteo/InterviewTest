@@ -118,9 +118,9 @@ class ApiController extends AbstractController
     {
         $authorRepository = $this->entityManager->getRepository(Author::class);
 
-        $author = $authorRepository->findById($id);
+        $author = $authorRepository->find($id);
 
-        if (empty($author)) {
+        if (! $author) {
             return $this->json(['404' => 'The author does not exist.'], 404);
         }
 
