@@ -5,9 +5,6 @@ namespace App\Entity;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
@@ -23,41 +20,40 @@ class Article
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\NotBlank(
+     *      message="The title must be provided"
+     * )
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(
+     *      message="The content must be provided"
+     * )
      */
     private $content;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
      */
     private $updatedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=Author::class)
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(
+     *      message="The author must be provided"
+     * )
      */
     private $Author;
-
-    /**
-     * @param ClassMetadata $metadata
-     *
-     * @return void
-     */
-    public static function loadValidatorMetadata(ClassMetadata $metadata)
-    {
-        $metadata->addPropertyConstraint('title', new NotBlank());
-        $metadata->addPropertyConstraint('title', new NotNull());
-        $metadata->addPropertyConstraint('content', new NotBlank());
-    }
 
     public function getId(): ?int
     {
