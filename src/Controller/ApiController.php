@@ -18,7 +18,6 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class ApiController extends AbstractController
 {
-    private NormalizerInterface $normalizer;
     private SerializerInterface $serializer;
     private EntityManagerInterface $entityManager;
     private CacheInterface $cache;
@@ -28,9 +27,8 @@ class ApiController extends AbstractController
      * @param SerializerInterface $serializer
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(NormalizerInterface $normalizer, SerializerInterface $serializer, EntityManagerInterface $entityManager, CacheInterface $cache)
+    public function __construct(SerializerInterface $serializer, EntityManagerInterface $entityManager, CacheInterface $cache)
     {
-        $this->normalizer = $normalizer;
         $this->serializer = $serializer;
         $this->entityManager = $entityManager;
         $this->cache = $cache;
@@ -43,8 +41,7 @@ class ApiController extends AbstractController
      */
     public function getArticles(): JsonResponse
     {
-        $articles = $this->entityManager->getRepository(Article::class)->findAll();
-        return $this->json($this->normalizeArticles($articles));
+        return $this->json($this->entityManager->getRepository(Article::class)->findAll());
     }
 
     /**
@@ -62,7 +59,7 @@ class ApiController extends AbstractController
             return $this->json(['404' => 'The article does not exist.'], 404);
         }
 
-        return $this->json($this->normalizeArticle($article));
+        return $this->json($article);
     }
 
     /**
@@ -104,11 +101,11 @@ class ApiController extends AbstractController
         $this->entityManager->persist($article);
         $this->entityManager->flush();
 
-        return $this->json($this->normalizeArticle($article));
+        return $this->json($article, 201);
     }
 
     /**
-     * @Route("/api/v1/author/{id}/countArticles", name="api_v1_author_articles_count", methods={"GET"})
+     * @Route("/api/v1/authors/{id}/countArticles", name="api_v1_author_articles_count", methods={"GET"})
      *
      * @param integer $id
      *
@@ -124,35 +121,8 @@ class ApiController extends AbstractController
             return $this->json(['404' => 'The author does not exist.'], 404);
         }
 
-        $count = $this->cache->get("author_articles_count_{$id}", fn () => $this->entityManager->getRepository(Author::class)->getArticlesCount($id));
+        $count = $this->cache->get("author_articles_count_{$id}", fn () => $authorRepository->getArticlesCount($id));
 
         return $this->json(['count' => $count]);
-    }
-
-    /**
-     * @param Article $article
-     *
-     * @return array
-     */
-    private function normalizeArticle(Article $article): array
-    {
-        $normalizedArticle = $this->normalizer->normalize($article);
-        $normalizedArticle['uri'] = $this->generateUrl('api_v1_article_get', ["id" => $article->getId()]);
-
-        return $normalizedArticle;
-    }
-
-    /**
-     * @param array<Article> $articles
-     *
-     * @return array
-     */
-    private function normalizeArticles(array $articles): array
-    {
-        foreach ($articles as $article) {
-            $normalizedArticles[] = $this->normalizeArticle($article);
-        }
-
-        return $normalizedArticles ?? [];
     }
 }
