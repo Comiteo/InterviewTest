@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Entity\Author;
 use App\Repository\ArticleRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -74,9 +73,6 @@ class ApiController extends AbstractController
         $body = $request->getContent();
 
         $article = $this->serializer->deserialize($body, Article::class, 'json');
-
-        $article->setCreatedAt(new DateTime())
-            ->setUpdatedAt(new DateTime());
 
         $errors = $validator->validate($article);
 

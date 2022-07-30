@@ -34,3 +34,11 @@ services:
         resource: '../src/Serializer/Normalizer'
         autowire: true
         tags: ['serializer.normalizer']
+
+    App\EventListener\TimestampListener:
+        tags:
+            -
+                name: 'doctrine.event_listener'
+                event: 'prePersist'
+                priority: 500
+                connection: 'default'
