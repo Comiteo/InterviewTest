@@ -22,9 +22,9 @@ class ApiController extends AbstractController
     private CacheInterface $cache;
 
     /**
-     * @param NormalizerInterface $normalizer
      * @param SerializerInterface $serializer
      * @param EntityManagerInterface $entityManager
+     * @param CacheInterface $cache
      */
     public function __construct(SerializerInterface $serializer, EntityManagerInterface $entityManager, CacheInterface $cache)
     {
