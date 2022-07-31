@@ -35,7 +35,7 @@ class AuthorRepository extends ServiceEntityRepository
 
         $count = $articleRepository->createQueryBuilder('article')
             ->select('count(article.id)')
-            ->where("article.Author = {$authorId}")
+            ->where("article.author = {$authorId}")
             ->getQuery()
             ->getScalarResult();
 

@@ -53,7 +53,7 @@ class Article
      *      message="The author must be provided"
      * )
      */
-    private $Author;
+    private Author $author;
 
     public function getId(): ?int
     {
@@ -110,12 +110,12 @@ class Article
 
     public function getAuthor(): ?Author
     {
-        return $this->Author;
+        return $this->author;
     }
 
-    public function setAuthor(?Author $Author): self
+    public function setAuthor(?Author $author): self
     {
-        $this->Author = $Author;
+        $this->author = $author;
 
         return $this;
     }

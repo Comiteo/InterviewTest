@@ -51,6 +51,8 @@ class ArticleController extends AbstractController
             $entityManager->persist($article);
             $entityManager->flush();
 
+            $this->cache->delete("author_articles_count_{$article->getAuthor()->getId()}");
+
             return $this->redirectToRoute('article_index');
         }
 
