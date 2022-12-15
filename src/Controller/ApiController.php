@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -21,11 +22,10 @@ class ApiController extends AbstractController
 
     /**
      * @Route("/api/v1/articles/{id}", name="api_v1_article_get", methods={"GET"})
+     * @ParamConverter("article", class="App:Article")
      */
-    public function getOne(int $id)
+    public function getOne(Article $article)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        return $this->json($article = $em->getRepository('App:Article')->find($id));
+        return $this->json($article);
     }
 }
