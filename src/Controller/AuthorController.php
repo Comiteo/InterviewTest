@@ -24,8 +24,14 @@ class AuthorController extends AbstractController
      */
     public function counter(Author $author): JsonResponse
     {
-        return $this->json([
+        $response = $this->json([
             'counter' => $this->articlesCounter->countArticles($author)
         ]);
+
+        $response
+            ->setTtl(PHP_INT_MAX)
+        ;
+
+        return $response;
     }
 }
